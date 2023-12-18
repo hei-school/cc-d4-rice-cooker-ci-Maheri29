@@ -1,0 +1,27 @@
+version: 2.1
+
+workflows:
+  version-1:
+    jobs:
+      - build
+
+jobs:
+  build:
+    docker:
+      - image: ruby:3.2.2
+
+    working_directory: /app
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            gem install bundler -v '~> 2.0'
+            bundle install --jobs 4 --retry 3
+
+      - run:
+          name: Run tests
+          command: |
+            bundle exec rspec
